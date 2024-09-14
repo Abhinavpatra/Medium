@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+// uuid is a popular format to create unique identifiers.
+model User {
+  id       String   @id @default(uuid())
+  username    String   @unique
+  name     String?
+  password String
+  posts    Post[]
+}
+//the posts Post[] is an array of posts, which is linked to one of the Post, with reference being authorId
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id])
+  // this above specifies that the relation field is authorId, and the reference field is id, which means that the Post is linked to the User, by:
+  // these two columns of the Tables.
+  authorId  String
+}   
