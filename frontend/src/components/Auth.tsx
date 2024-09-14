@@ -26,7 +26,6 @@ export default function Auth({ type }: { type: "signup" | "signin" }){
             localStorage.setItem("token",jwt)
             navigate("/blogs")
         } catch (error) {
-            alert("Error while doing it");
             console.error("Failed fetching the backend info",error);
         }
         
