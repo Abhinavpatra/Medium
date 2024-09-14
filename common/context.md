@@ -1,0 +1,1 @@
+this folder stores the files that are for common use by both the backend and the frontend.
