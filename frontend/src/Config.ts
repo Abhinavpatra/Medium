@@ -1,1 +1,1 @@
-export const BACKEND_URL="https://backend.patraabhinav12.workers.dev"
+export const BACKEND_URL="https://medium-backend.patraabhinav12.workers.dev"
