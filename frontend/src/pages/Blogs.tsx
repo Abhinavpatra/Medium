@@ -12,6 +12,7 @@ interface Blog {
     id: string;
     title: string;
     content: string;
+    authorId: string;
     author?: {
         id: string;
         name: string;
@@ -20,7 +21,7 @@ interface Blog {
 
 export default function Blogs() {
     const { loading, blogs } = useBlogs();
-    const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+    const [currentUserId, setCurrentUserId] = useState<string | null>(localStorage.getItem('userId')); // Get user ID from local storage
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -62,6 +63,8 @@ export default function Blogs() {
                 <div className="max-w-xl">
                     {posts.map((post: Blog) => (
                         <BlogCard
+                        authorId={post.authorId}
+                        currentUserId={currentUserId}   
                             id={post.id}
                             authorName={post?.author?.name || "Unknown"}
                             title={post.title}
@@ -77,11 +80,14 @@ export default function Blogs() {
                     ))}
                     {/* Example of a hardcoded blog card */}
                     <BlogCard
+                        authorId="randomshitgo"
                         authorName="abhinav"
                         title="Blog of the day"
                         content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae officia explicabo distinctio nesciunt tenetur quasi, placeat et nihil voluptatibus rem optio. Consequatur, ut! Debitis, praesentium quidem reprehenderit tenetur deserunt qui? lore Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae officia explicabo distinctio nesciunt tenetur quasi, placeat et nihil voluptatibus rem optio. Consequatur, ut! Debitis, praesentium quidem reprehenderit tenetur deserunt qui? lore"
                         publishedDate="6th Sept 2024"
-                    />
+                    >
+                        
+                    </BlogCard>
                 </div>
             </div>
         </>

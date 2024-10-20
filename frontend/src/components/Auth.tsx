@@ -19,20 +19,21 @@ export default function Auth({ type, onError }: { type: "signup" | "signin"; onE
         password:""
 
     })
-    async function sendRequest(){
+    const sendRequest = async () => {
         try {
-            const res= await axios.post(`${BACKEND_URL}/api/v1/user/${type==="signup"?"signup":"signin"}`,postInputs)
-            const jwt=res.data.jwt;
-            localStorage.setItem("token",jwt)
-            navigate("/blogs")
+            const res = await axios.post(`${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`, postInputs);
+            const jwt = res.data.jwt;
+            const userId = res.data.id; // Assuming the response contains the user's ID
+            localStorage.setItem("token", jwt);
+            localStorage.setItem("userId", userId); // Store user ID
+            navigate("/blogs");
         } catch (error) {
             console.error("Failed fetching the backend info", error);
             if (type === "signin") {
                 onError(); // Call the onError function if login fails
             }
         }
-        
-    }
+    };
     return<>
     <div className="h-screen flex justify-center flex-col ">
         <div className="flex justify-center">
