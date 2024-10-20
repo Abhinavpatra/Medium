@@ -3,14 +3,15 @@ import { useState,useEffect } from "react";
 import { BACKEND_URL } from "../Config";
 
 interface Blog {
-    post:{
-    id:string,
-    title: string;
-    content: string;
-    author: {
-        name: string;
+    post: {
+        id: string;
+        title: string;
+        content: string;
+        author: {
+            name: string;
+            id: string; // Ensure this is included
+        };
     };
-}
 }
 
 export default function useBlog({id}:{id:string}){
