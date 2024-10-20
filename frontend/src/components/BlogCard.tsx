@@ -8,15 +8,29 @@ interface BlogCardProps {
     content: string,
     publishedDate: string,
     children?: React.ReactNode; // Add this line to accept children
+    currentUserId?: string | null; // New prop
+}
+
+interface BlogCardProps {
+    id?: string,
+    authorId: string,
+    authorName: string,
+    title: string,
+    content: string,
+    publishedDate: string,
+    children?: React.ReactNode;
+    currentUserId?: string | null;
 }
 
 export default function BlogCard({
     id,
+    authorId,
     authorName,
     title,
     content,
     publishedDate,
-    children // Include children in the destructured props
+    children,
+    currentUserId
 }: BlogCardProps) {
     return (
         <Link to={`/blog/${id}`}>
@@ -50,8 +64,12 @@ export default function BlogCard({
                     {`${Math.ceil(content.length / 100)} min read`}
                 </div>
                 
-                {/* Render children here */}
-                {children} {/* This will render the Edit button passed from Blogs component */}
+                {children}
+                {currentUserId === authorId && (
+                    <Link to={`/edit/${id}`}>
+                        <button className="mt-2 bg-blue-500 text-white rounded px-2 py-1">Edit</button>
+                    </Link>
+                )}
             </div>
         </Link>
     );
