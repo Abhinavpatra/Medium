@@ -6,4 +6,4 @@ npm run dev
 ```
 npm run deploy
 ```
-https://backend.patraabhinav12.workers.dev
+https://medium-backend.patraabhinav12.workers.dev

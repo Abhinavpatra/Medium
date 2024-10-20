@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@abhinavpatra/common": "^1.0.1",
-    "@prisma/client": "^5.19.1",
+    "@prisma/client": "^5.21.1",
     "@prisma/extension-accelerate": "^1.1.0",
     "hono": "^4.5.9"
   },

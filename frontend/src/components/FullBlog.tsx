@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import Appbar from "./AppBar";
 import Avatar from "./Avatar";
+import { useNavigate } from "react-router-dom";
 interface Blog {
     post:{
     id:string,
@@ -7,11 +9,18 @@ interface Blog {
     content: string;
     author: {
         name: string;
+        id: string;
     };
 }
 }
 
 export default function FullBlog({blog}:{blog:Blog}) {
+
+  const[isAuthor,setIsAuthor]=useState(false);
+  const navigate= useNavigate();
+  useEffect(()=>{
+    
+  })
   return <div>
     <Appbar/>
       <div className="grid grid-cols-12 w-full pt-200 px-10 max-w-screen-2xl">
