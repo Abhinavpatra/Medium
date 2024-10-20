@@ -6,7 +6,7 @@ import { BACKEND_URL } from "../Config"
 
 
 // read trpc docs
-export default function Auth({ type }: { type: "signup" | "signin" }){
+export default function Auth({ type, onError }: { type: "signup" | "signin"; onError: () => void }) {
     const navigate=useNavigate();
 
 
@@ -26,7 +26,10 @@ export default function Auth({ type }: { type: "signup" | "signin" }){
             localStorage.setItem("token",jwt)
             navigate("/blogs")
         } catch (error) {
-            console.error("Failed fetching the backend info",error);
+            console.error("Failed fetching the backend info", error);
+            if (type === "signin") {
+                onError(); // Call the onError function if login fails
+            }
         }
         
     }

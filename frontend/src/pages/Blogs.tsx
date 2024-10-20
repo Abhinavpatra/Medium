@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../Config";
 import { Link } from "react-router-dom";
+
+
 interface Blog {
     id: string;
     title: string;
@@ -58,9 +60,9 @@ export default function Blogs() {
             <AppBar />
             <div className="flex justify-center">
                 <div className="max-w-xl">
-                    {posts.map((post: Blog, index: number) => (
+                    {posts.map((post: Blog) => (
                         <BlogCard
-                            key={index}
+                            id={post.id}
                             authorName={post?.author?.name || "Unknown"}
                             title={post.title}
                             content={post.content}
