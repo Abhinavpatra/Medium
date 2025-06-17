@@ -12,8 +12,16 @@ const userRouter = new Hono<{
         JWT_SECRET: string;
     };
 }>();
+userRouter.get('/', (c) => {
+    return c.json({ message: "User Router is working" });
+});
 
 userRouter.post('/signup', async (c) => {
+    console.log("User signup route hit");
+    console.log('Environment check:', {
+    hasJwtSecret: !!c.env.JWT_SECRET,
+    jwtSecretLength: c.env.JWT_SECRET?.length
+});
     const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate());
@@ -27,6 +35,7 @@ userRouter.post('/signup', async (c) => {
             message: "invalid INPUT/inputs"
         });
     }
+    console.log("User signup route hit2");
 
     const user = await prisma.user.create({
         data: {

@@ -5,7 +5,6 @@ import Quote from "../components/Quote";
 export default function Signup(){
     return<>
      <div className="grid grid-cols-1 lg:grid-cols-2">
-
 <div>
     <Auth onError={() => {}} type="signup"/>
 
