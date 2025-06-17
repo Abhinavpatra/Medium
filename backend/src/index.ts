@@ -18,8 +18,8 @@ app.get('/',async (c)=>{
   })
 })
 
-app.route("api/v1/user", userRouter);
-app.route("api/v1/blog", blogRouter);
+app.route("api/v1/user/", userRouter);
+app.route("api/v1/blog/", blogRouter);
 app.get("/api/v1/anything", async(c)=>{
   return c.json({
     "message": "I work"
