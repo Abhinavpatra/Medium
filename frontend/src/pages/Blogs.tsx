@@ -21,7 +21,9 @@ interface Blog {
 export default function Blogs() {
   const { loading, blogs } = useBlogs();
   const navigate = useNavigate();
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+    // const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+  const [, setCurrentUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
