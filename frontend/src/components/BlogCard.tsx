@@ -1,76 +1,63 @@
 import Avatar from "./Avatar"
 import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
 
 interface BlogCardProps {
-    id?: string,
-    authorName: string,
-    title: string,
-    content: string,
-    publishedDate: string,
-    children?: React.ReactNode; // Add this line to accept children
-    currentUserId?: string | null; // New prop
-}
-
-interface BlogCardProps {
-    id?: string,
-    authorId: string,
-    authorName: string,
-    title: string,
-    content: string,
-    publishedDate: string,
+    id: string;
+    authorName: string;
+    title: string;
+    content: string;
+    publishedDate: string;
+    authorId: string;
     children?: React.ReactNode;
-    currentUserId?: string | null;
 }
 
 export default function BlogCard({
     id,
-    authorId,
     authorName,
     title,
     content,
     publishedDate,
-    children,
-    currentUserId
+    authorId,
+    children
 }: BlogCardProps) {
+    const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+        const userId = localStorage.getItem('userId');
+        setCurrentUserId(userId);
+    }, []);
+
     return (
-        <Link to={`/blog/${id}`}>
-            <div className="p-4 border-b border-slate-200 pb-4 w-screen max-w-screen-md cursor-pointer ">
-                <div className="flex">
-                    <div className="flex justify-center flex-col">
-                        <Avatar size={"small"} name={authorName} />
-                    </div>
-
-                    <div className="text-sm font-extralight pr-2 pl-2">
-                        {authorName}
-                    </div>
-
-                    <div className="flex justify-center pr-2 flex-col">
-                        <div className="h-1 w-1 text-gray-500 rounded-full bg-slate-400"></div>
-                    </div>
-
-                    <div className="text-sm font-thin text-slate-600">
-                        {publishedDate}
-                    </div>
+        <div className="p-4 border-b border-slate-200">
+            <div className="flex">
+                <Avatar name={authorName} />
+                <div className="flex flex-col justify-center pl-2 text-sm font-extralight">
+                    {authorName}
                 </div>
-                <div className="pt-2 text-xl font-bold">
+                <div className="flex flex-col justify-center pl-2">
+                    <div className="w-1 h-1 text-gray-500 rounded-full bg-slate-400"></div>
+                </div>
+                <div className="flex flex-col justify-center pl-2 text-sm font-thin text-slate-500">
+                    {publishedDate}
+                </div>
+            </div>
+            <Link to={`/blog/${id}`}>
+                <div className="pt-2 text-xl font-semibold">
                     {title}
                 </div>
-
-                <div className="text-sm font-thin">
-                    {content.slice(0, 220) + "...."}
+                <div className="font-thin text-md">
+                    {content.slice(0, 100) + "..."}
                 </div>
-
-                <div className="pt-2 text-slate-400 text-sm font-thin">
-                    {`${Math.ceil(content.length / 100)} min read`}
-                </div>
-                
-                {children}
-                {currentUserId === authorId && (
-                    <Link to={`/edit/${id}`}>
-                        <button className="mt-2 bg-blue-500 text-white rounded px-2 py-1">Edit</button>
-                    </Link>
-                )}
-            </div>
-        </Link>
+            </Link>
+            {currentUserId === authorId && (
+                <Link to={`/edit/${id}`}>
+                    <button className="px-3 py-1 mt-2 text-white bg-blue-500 rounded">
+                        Edit
+                    </button>
+                </Link>
+            )}
+            {children}
+        </div>
     );
 }

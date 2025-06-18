@@ -28,5 +28,5 @@ app.get("/api/v1/anything", async(c)=>{
 
 // this is the middleware
 
-export default app 
+export default app;
 // HONO works in cloudflare workers and not express

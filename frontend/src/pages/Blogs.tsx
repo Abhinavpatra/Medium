@@ -5,91 +5,94 @@ import useBlogs from "../hooks/UseBlogs";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../Config";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 interface Blog {
+  id: string;
+  title: string;
+  content: string;
+  authorId: string;
+  author?: {
     id: string;
-    title: string;
-    content: string;
-    authorId: string;
-    author?: {
-        id: string;
-        name: string;
-    };
+    name: string;
+  };
 }
 
 export default function Blogs() {
-    const { loading, blogs } = useBlogs();
-    const [currentUserId, setCurrentUserId] = useState<string | null>(localStorage.getItem('userId')); // Get user ID from local storage
+  const { loading, blogs } = useBlogs();
+  const navigate = useNavigate();
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            axios.get(`${BACKEND_URL}/api/v1/user/profile`, {
-                headers: {
-                    Authorization: token
-                }
-            })
-            .then(response => {
-                setCurrentUserId(response.data.id); // Assuming the response contains the user's ID
-            })
-            .catch(error => {
-                console.error('Error fetching user profile:', error);
-            });
-        }
-    }, []);
-
-    if (loading) {
-        return (
-            <div>
-                <SkeletonBlogs />
-                <SkeletonBlogs />
-                <SkeletonBlogs />
-                <SkeletonBlogs />
-                <SkeletonBlogs />
-            </div>
-        );
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/signin");
+      return;
     }
 
-    // Access the posts array from blogs
-    //@ts-ignore
-    const posts = blogs?.posts || [];
+    // Get user ID from localStorage
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      setCurrentUserId(userId);
+    } else {
+      // If userId is not in localStorage, fetch it
+      axios
+        .get(`${BACKEND_URL}/api/v1/user/me`, {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((response) => {
+          const userId = response.data.user.id;
+          localStorage.setItem("userId", userId);
+          setCurrentUserId(userId);
+        })
+        .catch((error) => {
+          console.error("Error fetching user profile:", error);
+          if (error.response?.status === 401) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("userId");
+            navigate("/signin");
+          }
+        });
+    }
+  }, [navigate]);
 
+  if (loading) {
     return (
-        <>
-            <AppBar />
-            <div className="flex justify-center">
-                <div className="max-w-xl">
-                    {posts.map((post: Blog) => (
-                        <BlogCard
-                        authorId={post.authorId}
-                        currentUserId={currentUserId}   
-                            id={post.id}
-                            authorName={post?.author?.name || "Unknown"}
-                            title={post.title}
-                            content={post.content}
-                            publishedDate="6th Sept 2024" // Hardcoded, update if needed
-                        >
-                            {currentUserId === post.author?.id && (
-                                <Link to={`/edit/${post.id}`}>
-                                    <button className="px-3 py-1 mt-2 text-white bg-blue-500 rounded">Edit</button>
-                                </Link>
-                            )}
-                        </BlogCard>
-                    ))}
-                    {/* Example of a hardcoded blog card */}
-                    <BlogCard
-                        authorId="randomshitgo"
-                        authorName="abhinav"
-                        title="Blog of the day"
-                        content="Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae officia explicabo distinctio nesciunt tenetur quasi, placeat et nihil voluptatibus rem optio. Consequatur, ut! Debitis, praesentium quidem reprehenderit tenetur deserunt qui? lore Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae officia explicabo distinctio nesciunt tenetur quasi, placeat et nihil voluptatibus rem optio. Consequatur, ut! Debitis, praesentium quidem reprehenderit tenetur deserunt qui? lore"
-                        publishedDate="6th Sept 2024"
-                    >
-                        
-                    </BlogCard>
-                </div>
-            </div>
-        </>
+      <div>
+        <AppBar />
+        <div className="max-w-xl mx-auto">
+          <SkeletonBlogs />
+          <SkeletonBlogs />
+          <SkeletonBlogs />
+        </div>
+      </div>
     );
+  }
+
+  // Access the posts array from blogs
+  //@ts-ignore
+  const posts = blogs?.posts || [];
+
+  return (
+    <>
+      <AppBar />
+      <div className="flex justify-center">
+        <div className="max-w-xl">
+          {posts.map((post: Blog) => (
+            <BlogCard
+              key={post.id}
+              id={post.id}
+              authorId={post.author?.id || post.authorId}
+              authorName={post.author?.name || "Unknown"}
+              title={post.title}
+              content={post.content}
+              publishedDate="June 18, 2025"
+            />
+          ))}
+        </div>
+      </div>
+    </>
+  );
 }
