@@ -5,7 +5,7 @@ import useBlogs from "../hooks/UseBlogs";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BACKEND_URL } from "../Config";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface Blog {
   id: string;
