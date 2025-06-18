@@ -73,6 +73,36 @@ userRouter.post('/signin', async (c) => {
     return c.json({"jwt":jwt});
 });
 
+
+
+userRouter.get('/me', async(c)=>{
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+    const authHeader = c.req.header('Authorization')
+    if (!authHeader) {
+        c.status(401);
+        return c.json({ error: "Unauthorized" });
+    }
+    try {
+        const user = await verify(authHeader, c.env.JWT_SECRET) as { id: string };
+        const userData = await prisma.user.findUnique({
+            where: {
+                id: user.id
+            },
+            select: {
+                id: true,
+                name: true,
+                username: true
+            }
+        })
+        return c.json({ user: userData });
+    } catch (e) {
+        c.status(403);
+        return c.json({ error: "Invalid token" });
+    }
+})
+
 // New route: Get all users
 userRouter.get('/all-users', async (c) => {
     const prisma = new PrismaClient({

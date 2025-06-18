@@ -73,7 +73,7 @@ export default function Blogs() {
                         >
                             {currentUserId === post.author?.id && (
                                 <Link to={`/edit/${post.id}`}>
-                                    <button className="mt-2 bg-blue-500 text-white py-1 px-3 rounded">Edit</button>
+                                    <button className="px-3 py-1 mt-2 text-white bg-blue-500 rounded">Edit</button>
                                 </Link>
                             )}
                         </BlogCard>
