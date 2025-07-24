@@ -3,12 +3,13 @@
 A full-stack blogging platform inspired by Medium, built with React, TypeScript, and Cloudflare Workers for the frontend, and Hono with Prisma for the backend.
 
 ## Table of Contents
+- [Table of Contents](#table-of-contents)
 - [Features](#features)
 - [Technologies](#technologies)
 - [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
 - [API Endpoints](#api-endpoints)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 - User authentication (sign up and sign in)
@@ -44,7 +45,7 @@ A full-stack blogging platform inspired by Medium, built with React, TypeScript,
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/medium-clone.git
+   git clone https://github.com/abhinavpatra/medium-clone.git
    cd medium-clone
    ```
 
@@ -87,9 +88,3 @@ A full-stack blogging platform inspired by Medium, built with React, TypeScript,
   - `PUT /api/v1/blog/update-post`: Update an existing blog post
   - `GET /api/v1/blog/bulk`: Retrieve all blog posts
   - `GET /api/v1/blog/:id`: Retrieve a specific blog post
-
-## Contributing
-Contributions are welcome! Please open an issue or submit a pull request.
-
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
