@@ -74,7 +74,6 @@ export default function Blogs() {
   }
 
   // Access the posts array from blogs
-  //@ts-ignore
   const posts = blogs?.posts || [];
 
   return (
