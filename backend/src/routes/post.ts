@@ -2,18 +2,10 @@ import { createBlogInput, updateBlogInput } from "@abhinavpatra/common";
 import { Hono } from "hono";
 import { verify } from "hono/jwt";
 import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from '@prisma/extension-accelerate';
+import { withAccelerate } from "@prisma/extension-accelerate";
+import type { BlogContext, PostWithPreview, BulkPostResult } from "../types";
 
-
-const blogRouter = new Hono<{
-  Bindings: {
-    DATABASE_URL: string;
-    JWT_SECRET: string;
-  };
-  Variables: {
-    userId: string;
-  };
-}>();
+const blogRouter = new Hono<BlogContext>();
 
 blogRouter.get("/", (c) => {
   return c.json({ message: "blog Router is working" });
@@ -22,7 +14,7 @@ blogRouter.get("/", (c) => {
 blogRouter.use("/*", async (c, next) => {
   const authHeader = c.req.header("Authorization") || "";
   console.log(`Request method: ${c.req.method}, Path: ${c.req.url}`);
-  
+
   try {
     const user = await verify(authHeader, c.env.JWT_SECRET);
     if (user) {
@@ -59,9 +51,7 @@ blogRouter.post("/new-post", async (c) => {
       return c.json({ message: "Unauthorized - User ID not found" });
     }
 
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env?.DATABASE_URL,
-    }).$extends(withAccelerate());
+    const prisma = new PrismaClient().$extends(withAccelerate());
 
     const post = await prisma.post.create({
       data: {
@@ -86,7 +76,7 @@ blogRouter.put("/update-post", async (c) => {
   try {
     const body = await c.req.json();
     const { success } = updateBlogInput.safeParse(body);
-    
+
     if (!success) {
       c.status(411);
       return c.json({
@@ -95,13 +85,11 @@ blogRouter.put("/update-post", async (c) => {
     }
 
     const userId = c.get("userId");
-    const prisma = new PrismaClient({
-      datasourceUrl: c.env.DATABASE_URL,
-    }).$extends(withAccelerate());
+    const prisma = new PrismaClient().$extends(withAccelerate());
 
     // Check if post exists and user owns it
     const existingPost = await prisma.post.findUnique({
-      where: { id: parseInt(body.id, 10) }
+      where: { id: parseInt(body.id, 10) },
     });
 
     if (!existingPost) {
@@ -137,24 +125,94 @@ blogRouter.put("/update-post", async (c) => {
   }
 });
 
+blogRouter.post("/:id/comments", async (c) => {
+  try {
+    const postId = parseInt(c.req.param("id"), 10);
+
+    if (Number.isNaN(postId)) {
+      c.status(400);
+      return c.json({ message: "Invalid post ID" });
+    }
+
+    const body = await c.req.json();
+    const content = typeof body.content === "string" ? body.content.trim() : "";
+
+    if (!content || content.length > 600) {
+      c.status(411);
+      return c.json({
+        message: "Comment must be between 1 and 600 characters",
+      });
+    }
+
+    const userId = c.get("userId");
+    const prisma = new PrismaClient().$extends(withAccelerate());
+
+    const post = await prisma.post.findUnique({
+      where: { id: postId },
+      select: { id: true },
+    });
+
+    if (!post) {
+      c.status(404);
+      return c.json({ message: "Post not found" });
+    }
+
+    const existingCommentCount = await prisma.comment.count({
+      where: {
+        postId,
+        authorId: userId,
+      },
+    });
+
+    if (existingCommentCount >= 10) {
+      c.status(429);
+      return c.json({ message: "Comment limit reached for this post" });
+    }
+
+    const comment = await prisma.comment.create({
+      data: {
+        content,
+        postId,
+        authorId: userId,
+      },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        author: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+          },
+        },
+      },
+    });
+
+    return c.json({ comment });
+  } catch (error) {
+    console.error("Error creating comment:", error);
+    c.status(500);
+    return c.json({ message: "Error creating comment", error });
+  }
+});
+
 blogRouter.get("/bulk", async (c) => {
   console.log("Fetching posts in bulk");
 
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
-  
+  const prisma = new PrismaClient().$extends(withAccelerate());
+
   try {
     // Get pagination parameters from query string
-    const page = parseInt(c.req.query('page') || '1');
-    const limit = parseInt(c.req.query('limit') || '10');
+    const page = parseInt(c.req.query("page") || "1");
+    const limit = parseInt(c.req.query("limit") || "10");
     const skip = (page - 1) * limit;
 
     const posts = await prisma.post.findMany({
       take: limit,
       skip: skip,
       orderBy: {
-        id: 'desc' // Show newest first
+        id: "desc", // Show newest first
       },
       select: {
         title: true,
@@ -171,9 +229,11 @@ blogRouter.get("/bulk", async (c) => {
     });
 
     // Truncate content for bulk view
-    const postsWithPreview = posts.map(post => ({
+    const postsWithPreview = posts.map((post) => ({
       ...post,
-      content: post.content.substring(0, 200) + (post.content.length > 200 ? '...' : '')
+      content:
+        post.content.substring(0, 200) +
+        (post.content.length > 200 ? "..." : ""),
     }));
 
     // Get total count for pagination
@@ -185,8 +245,8 @@ blogRouter.get("/bulk", async (c) => {
         page,
         limit,
         total: totalPosts,
-        totalPages: Math.ceil(totalPosts / limit)
-      }
+        totalPages: Math.ceil(totalPosts / limit),
+      },
     });
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -205,9 +265,7 @@ blogRouter.get("/:id", async (c) => {
     return c.json({ message: "Invalid post ID" });
   }
 
-  const prisma = new PrismaClient({
-    datasourceUrl: c.env.DATABASE_URL,
-  }).$extends(withAccelerate());
+  const prisma = new PrismaClient().$extends(withAccelerate());
 
   try {
     const post = await prisma.post.findUnique({
@@ -223,6 +281,23 @@ blogRouter.get("/:id", async (c) => {
           select: {
             name: true,
             id: true,
+          },
+        },
+        comments: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            author: {
+              select: {
+                id: true,
+                name: true,
+                username: true,
+              },
+            },
           },
         },
       },
@@ -247,3 +322,4 @@ blogRouter.get("/:id", async (c) => {
 });
 
 export default blogRouter;
+

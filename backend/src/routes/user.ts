@@ -3,13 +3,9 @@ import { PrismaClient } from '@prisma/client/edge';
 import { withAccelerate } from '@prisma/extension-accelerate';
 import { sign, verify } from 'hono/jwt';
 import { signUpInput } from '@abhinavpatra/common';
+import type { UserContext, ParsedJwtPayload } from '../types';
 
-const userRouter = new Hono<{
-    Bindings: {
-        DATABASE_URL: string;
-        JWT_SECRET: string;
-    };
-}>();
+const userRouter = new Hono<UserContext>();
 
 userRouter.get('/', (c) => {
     return c.json({ message: "User Router is working" });
@@ -23,9 +19,7 @@ userRouter.post('/signup', async (c) => {
     });
     
     try {
-        const prisma = new PrismaClient({
-            datasourceUrl: c.env.DATABASE_URL,
-        }).$extends(withAccelerate());
+        const prisma = new PrismaClient().$extends(withAccelerate());
 
         const body = await c.req.json();
         const { success } = signUpInput.safeParse(body);
@@ -51,10 +45,10 @@ userRouter.post('/signup', async (c) => {
         return c.json({
             jwt: token
         });
-    } catch (e: any) {
+    } catch (e) {
         console.error("Signup error:", e);
         
-        if (e.code === 'P2002') {
+        if (e && typeof e === 'object' && 'code' in e && e.code === 'P2002') {
             c.status(409);
             return c.json({ error: "Username already exists" });
         }
@@ -66,9 +60,7 @@ userRouter.post('/signup', async (c) => {
 
 userRouter.post('/signin', async (c) => {
     try {
-        const prisma = new PrismaClient({
-            datasourceUrl: c.env.DATABASE_URL,
-        }).$extends(withAccelerate());
+        const prisma = new PrismaClient().$extends(withAccelerate());
 
         const body = await c.req.json();
         const user = await prisma.user.findUnique({
@@ -94,9 +86,7 @@ userRouter.post('/signin', async (c) => {
 
 userRouter.get('/me', async(c) => {
     try {
-        const prisma = new PrismaClient({
-            datasourceUrl: c.env.DATABASE_URL,
-        }).$extends(withAccelerate());
+        const prisma = new PrismaClient().$extends(withAccelerate());
         
         const authHeader = c.req.header('Authorization');
         if (!authHeader) {
@@ -104,10 +94,10 @@ userRouter.get('/me', async(c) => {
             return c.json({ error: "Unauthorized" });
         }
         
-        const user = await verify(authHeader, c.env.JWT_SECRET) as { id: string };
+        const user = await verify(authHeader, c.env.JWT_SECRET) as unknown as ParsedJwtPayload;
         const userData = await prisma.user.findUnique({
             where: {
-                id: user.id
+                id: String(user.id)
             },
             select: {
                 id: true,
@@ -131,9 +121,7 @@ userRouter.get('/me', async(c) => {
 
 userRouter.get('/all-users', async (c) => {
     try {
-        const prisma = new PrismaClient({
-            datasourceUrl: c.env.DATABASE_URL,
-        }).$extends(withAccelerate())
+        const prisma = new PrismaClient().$extends(withAccelerate())
 
         const users = await prisma.user.findMany({
             select: {
