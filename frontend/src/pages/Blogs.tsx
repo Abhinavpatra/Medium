@@ -9,7 +9,7 @@ export default function Blogs() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
         <AppBar />
         <div className="max-w-2xl mx-auto pt-8 px-4">
           <SkeletonBlogs />
@@ -23,7 +23,7 @@ export default function Blogs() {
   const posts = blogs.posts || [];
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 dark:bg-black">
       <AppBar />
       <div className="flex justify-center pt-8 px-4">
         <div className="max-w-2xl w-full">
