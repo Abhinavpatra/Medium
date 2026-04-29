@@ -131,7 +131,7 @@ export default function FullBlog({ blog }: { blog: Blog }) {
           navigate("/blogs");
         }}
         onMouseEnter={() => playHover()}
-        className="ml-10 mt-6 flex items-center gap-2 bg-gray-400 text dark:bg-slate-100 rounded-2xl px-4 py-2 text-sm font-medium text-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-900 transition-all duration-300 tracking-wider"
+        className="ml-10 mt-6 flex items-center gap-2 bg-gray-400 text dark:bg-white rounded-2xl px-4 py-2 text-sm font-medium text-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-900 transition-all duration-300 tracking-wider"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M19 12H5"/>
@@ -149,14 +149,14 @@ export default function FullBlog({ blog }: { blog: Blog }) {
 
           <div className="mt-10 border-t border-slate-200 dark:border-slate-700 pt-6">
             <div className="text-lg font-semibold text-slate-800 dark:text-slate-200">Comments</div>
-            <div className="mt-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-4">
+            <div className="mt-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-black p-4">
               <textarea
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
                 maxLength={600}
                 rows={4}
                 placeholder="Write a comment"
-                className="w-full resize-none rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-700 p-3 text-sm text-slate-800 dark:text-slate-200 outline-none focus:border-slate-400 dark:focus:border-slate-400"
+                className="w-full resize-none rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-black p-3 text-sm text-slate-800 dark:text-slate-200 outline-none focus:border-slate-400 dark:focus:border-slate-400"
               />
               <div className="mt-2 flex items-center justify-between text-xs">
                 <span className={characterCountClass}>

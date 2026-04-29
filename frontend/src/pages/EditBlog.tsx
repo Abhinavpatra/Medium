@@ -80,7 +80,7 @@ export default function EditBlog() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-white dark:bg-slate-900">
+            <div className="min-h-screen bg-white dark:bg-dark">
                 <Appbar />
                 <div className="flex justify-center items-center h-screen">
                     <div className="text-gray-600 dark:text-gray-300 text-lg">Loading post...</div>
@@ -90,14 +90,14 @@ export default function EditBlog() {
     }
 
     return (
-        <div className="min-h-screen bg-white dark:bg-slate-900">
+        <div className="min-h-screen bg-white dark:bg-dark">
             <Appbar />
             <div className="flex justify-center pt-8">
                 <div className="max-w-5xl w-full px-4">
                     <h2 className="text-2xl font-bold mb-4 text-slate-900 dark:text-white">Edit Post</h2>
                     
                     <input 
-                        className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full p-2.5"
+                        className="bg-gray-50 dark:bg-black border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full p-2.5"
                         type="text"
                         placeholder="Title"
                         value={title}
@@ -106,7 +106,7 @@ export default function EditBlog() {
                     
                     <div className="mt-4">
                         <textarea 
-                            className="bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full p-2.5 h-64 resize-none"
+                            className="bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 focus:outline-none block w-full p-2.5 h-64 resize-none"
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             placeholder="Write your thoughts here..."
@@ -143,7 +143,7 @@ export default function EditBlog() {
                         </button>
                         
                         <button 
-                            className="bg-gray-300 dark:bg-slate-700 hover:bg-gray-400 dark:hover:bg-slate-600 text-gray-800 dark:text-slate-200 font-bold py-2 px-6 rounded transition-colors"
+                            className="bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-slate-600 text-gray-800 dark:text-slate-200 font-bold py-2 px-6 rounded transition-colors"
                             onClick={() => {
                                 navigate(`/blog/${id}`)}}
                             disabled={isUpdating}

@@ -51,7 +51,7 @@ export default function Publish() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900">
+    <div className="min-h-screen bg-white dark:bg-black">
       <Appbar />
       <div className="flex justify-center pt-8">
         <div className="max-w-5xl w-full">
@@ -60,7 +60,7 @@ export default function Publish() {
             placeholder="Title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="mt-2 focus:outline-none focus:border-black dark:focus:border-white bg-gray-50 dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5"
+            className="mt-2 focus:outline-none focus:border-black dark:focus:border-white bg-gray-50 dark:bg-black border border-gray-300 dark:border-slate-700 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5"
           />
         </div>
       </div>
@@ -78,7 +78,7 @@ export default function Publish() {
             handlePublish();
           }}
           disabled={!canPublish}
-          className={`bg-white dark:bg-slate-800 hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 px-4 border border-gray-400 dark:border-slate-600 rounded shadow ${
+          className={`bg-white dark:bg-black hover:bg-gray-100 dark:hover:bg-slate-700 text-gray-800 dark:text-slate-200 font-semibold py-2 px-4 border border-gray-400 dark:border-slate-600 rounded shadow ${
             !canPublish ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
@@ -109,7 +109,7 @@ export function TextEditor({
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="focus:outline-none focus:border-black dark:focus:border-white p-2.5 mt-4 block h-64 w-full text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-slate-800 border border-gray-100 dark:border-slate-700"
+            className="focus:outline-none focus:border-black dark:focus:border-white p-2.5 mt-4 block h-64 w-full text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-slate-700"
             placeholder="Write your thoughts here..."
           />
           <div className="flex justify-between items-center mt-2 text-sm">

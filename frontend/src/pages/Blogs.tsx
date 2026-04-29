@@ -9,7 +9,7 @@ export default function Blogs() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+      <div className="min-h-screen bg-slate-50 dark:bg-black">
         <AppBar />
         <div className="max-w-2xl mx-auto pt-8 px-4">
           <SkeletonBlogs />

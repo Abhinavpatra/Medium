@@ -40,7 +40,7 @@ export default function Appbar() {
   };
 
   return (
-    <div className="sticky top-0 z-50 flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-100 dark:border-slate-800">
+    <div className="sticky top-0 z-50 flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-dark backdrop-blur-md border-b border-slate-100 dark:border-slate-800">
       <Link
         to={"/blogs"}
         onClick={() => playSelect()}
@@ -52,7 +52,7 @@ export default function Appbar() {
       <div className="flex items-center gap-6">
         <button
           onClick={handleThemeToggle}
-          className="group p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-4 focus:ring-slate-200 relative w-10 h-10 flex items-center justify-center"
+          className="group p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-black dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-4 focus:ring-slate-200 relative w-10 h-10 flex items-center justify-center"
           aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
         >
           <span className="bottom-10 right-10 left-0 m-auto w-fit whitespace-nowrap bg-slate-800 text-white dark:bg-white dark:text-black px-2.5 py-1 rounded-md text-xs font-semibold opacity-0 translate-y-0 group-hover:translate-y-10 group-hover:opacity-100 transition-all duration-400 pointer-events-none shadow-md">
