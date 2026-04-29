@@ -45,8 +45,10 @@ export default function FullBlog({ blog }: { blog: Blog }) {
   const [playBack] = useSound(toggle001Sound, { volume: 0.4 });
 
   useEffect(() => {
-    setComments(blog.post.comments || []);
-  }, [blog.post.comments]);
+    if (!submitting) {
+      setComments(blog.post.comments || []);
+    }
+  }, [blog.post.comments, submitting]);
 
   const characterCountClass = useMemo(() => {
     if (comment.length >= 550) {
@@ -150,40 +152,44 @@ export default function FullBlog({ blog }: { blog: Blog }) {
           <div className="mt-10 border-t border-slate-200 dark:border-slate-700 pt-6">
             <div className="text-lg font-semibold text-slate-800 dark:text-slate-200">Comments</div>
             <div className="mt-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-black p-4">
-              <textarea
-                value={comment}
-                onChange={(event) => setComment(event.target.value)}
-                maxLength={600}
-                rows={4}
-                placeholder="Write a comment"
-                className="w-full resize-none rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-black p-3 text-sm text-slate-800 dark:text-slate-200 outline-none focus:border-slate-400 dark:focus:border-slate-400"
-              />
-              <div className="mt-2 flex items-center justify-between text-xs">
-                <span className={characterCountClass}>
-                  {comment.length}/600 characters
-                  {comment.length >= 400 ? " - getting close to the limit" : ""}
-                </span>
-                <button
-                  type="button"
-                  onClick={()=>{
-                    playClick();
-                    handleCommentSubmit();
-                  }}
-                  disabled={
-                    submitting || !comment.trim() || comment.length > 600
-                  }
-                  className="rounded-full bg-slate-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-slate-900 transition-colors disabled:cursor-not-allowed disabled:bg-slate-400 dark:disabled:bg-slate-600"
-                >
-                  {submitting ? "Posting..." : "Post comment"}
-                </button>
-              </div>
-              {error && (
-                <div className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</div>
-              )}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  playClick();
+                  handleCommentSubmit();
+                }}
+              >
+                <textarea
+                  value={comment}
+                  onChange={(event) => setComment(event.target.value)}
+                  maxLength={600}
+                  rows={4}
+                  placeholder="Write a comment"
+                  className="w-full resize-none rounded-lg border border-slate-200 dark:border-slate-600 bg-white dark:bg-black p-3 text-sm text-slate-800 dark:text-slate-200 outline-none focus:border-slate-400 dark:focus:border-slate-400"
+                />
+                <div className="mt-2 flex items-center justify-between text-xs">
+                  <span className={characterCountClass}>
+                    {comment.length}/600 characters
+                    {comment.length >= 400 ? " - getting close to the limit" : ""}
+                  </span>
+                  <button
+                    type="submit"
+                    disabled={
+                      submitting || !comment.trim() || comment.length > 600
+                    }
+                    className="rounded-full bg-slate-900 dark:bg-white px-4 py-2 text-sm font-medium text-white dark:text-slate-900 transition-colors disabled:cursor-not-allowed disabled:bg-slate-400 dark:disabled:bg-slate-600"
+                  >
+                    {submitting ? "Posting..." : "Post comment"}
+                  </button>
+                </div>
+                {error && (
+                  <div className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</div>
+                )}
+              </form>
             </div>
 
             <div className="mt-6 space-y-4">
-              {comments.length === 0 ? (
+              {comments.length === 0 && !submitting ? (
                 <div className="text-sm text-slate-500 dark:text-slate-400">No comments yet.</div>
               ) : (
                 comments.map((item) => (
@@ -207,6 +213,15 @@ export default function FullBlog({ blog }: { blog: Blog }) {
                     </div>
                   </div>
                 ))
+              )}
+              {submitting && (
+                <div className="flex items-center justify-center py-4">
+                  <svg className="animate-spin h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span className="ml-2 text-sm text-slate-500 dark:text-slate-400">Posting comment...</span>
+                </div>
               )}
             </div>
           </div>
