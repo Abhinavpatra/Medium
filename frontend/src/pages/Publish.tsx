@@ -3,6 +3,7 @@ import Appbar from "../components/AppBar";
 import { BACKEND_URL } from "../Config";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import SoundManager from '../utils/sounds';
 
 const MAX_CONTENT_LENGTH = 600;
 
@@ -31,10 +32,12 @@ export default function Publish() {
     })
     .then(response => {
       console.log('Blog published:', response.data);
+      SoundManager.success();
       Navigate('/blogs');
     })
     .catch(error => {
       console.error('Error publishing blog:', error);
+      SoundManager.error();
       alert('Failed to publish blog. Please try again.');
       setIsPublishing(false);
     });
@@ -44,7 +47,7 @@ export default function Publish() {
     <>
       <Appbar />
       <div className="flex justify-center">
-        <div className="max-w-screen-lg w-full">
+        <div className="max-w-5xl w-full">
           <input
             type="text"
             placeholder="Title"
@@ -63,7 +66,10 @@ export default function Publish() {
 
       <div className="flex justify-center mt-4">
         <button
-          onClick={handlePublish}
+          onClick={() => {
+            SoundManager.click();
+            handlePublish();
+          }}
           disabled={!canPublish}
           className={`bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow ${
             !canPublish ? 'opacity-50 cursor-not-allowed' : ''

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Appbar from "./AppBar";
 import Avatar from "./Avatar";
 import { BACKEND_URL } from "../Config";
+import SoundManager from "../utils/sounds";
 interface Blog {
   post: {
     id: string;
@@ -118,7 +119,10 @@ export default function FullBlog({ blog }: { blog: Blog }) {
                   {comment.length >= 400 ? " - getting close to the limit" : ""}
                 </span>
                 <button
-                  onClick={handleCommentSubmit}
+                  onClick={()=>{
+                    SoundManager.click();
+                    handleCommentSubmit();
+                  }}
                   disabled={
                     submitting || !comment.trim() || comment.length > 600
                   }

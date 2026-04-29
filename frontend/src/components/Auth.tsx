@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../Config";
+import SoundManager from "../utils/sounds";
 
 export default function Auth({
   type,
@@ -129,7 +130,10 @@ export default function Auth({
             }
           />
           <button
-            onClick={sendRequest}
+            onClick={()=>{
+              SoundManager.click();
+              sendRequest()}
+            }
             type="button"
             className="mt-7 w-6/12 text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
           >

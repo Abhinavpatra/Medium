@@ -3,6 +3,7 @@ import { BACKEND_URL } from "../Config";
 import axios from "axios";
 import { useNavigate, useParams } from 'react-router-dom';
 import Appbar from "../components/AppBar";
+import SoundManager from "../utils/sounds";
 
 const MAX_CONTENT_LENGTH = 600;
 
@@ -124,7 +125,9 @@ export default function EditBlog() {
                             className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition-colors ${
                                 !canUpdate ? 'opacity-50 cursor-not-allowed hover:bg-blue-500' : ''
                             }`}
-                            onClick={handleUpdate}
+                            onClick={()=>{
+                                SoundManager.click();
+                                handleUpdate();}}
                             disabled={!canUpdate}
                         >
                             {isUpdating ? 'Updating...' : 'Update Post'}
@@ -132,7 +135,9 @@ export default function EditBlog() {
                         
                         <button 
                             className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded transition-colors"
-                            onClick={() => navigate(`/blog/${id}`)}
+                            onClick={() => {
+                                SoundManager.click();
+                                navigate(`/blog/${id}`)}}
                             disabled={isUpdating}
                         >
                             Cancel
