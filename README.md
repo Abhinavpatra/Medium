@@ -43,6 +43,7 @@ A full-stack blogging platform inspired by Medium, built with React, TypeScript,
 - Wrangler CLI
 
 ### Installation
+
 1. Clone the repository:
    ```bash
    git clone https://github.com/abhinavpatra/medium-clone.git
@@ -57,26 +58,21 @@ A full-stack blogging platform inspired by Medium, built with React, TypeScript,
    npm install
    ```
 
-3. Set up your PostgreSQL database and update the `DATABASE_URL` in your environment variables.
+3. Set up the database - see [backend/db/README.md](backend/db/README.md)
 
-4. Run database migrations:
-   ```bash
-   npx prisma migrate dev
-   ```
-
-5. Start the backend server:
+4. Start the backend server:
    ```bash
    cd backend
    npm run dev
    ```
 
-6. Start the frontend development server:
+5. Start the frontend development server:
    ```bash
    cd frontend
    npm run dev
    ```
 
-7. Open your browser and navigate to `http://localhost:3000` to view the application.
+6. Open your browser and navigate to `http://localhost:3000` to view the application.
 
 ## API Endpoints
 - **User Authentication**
