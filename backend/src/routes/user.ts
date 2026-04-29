@@ -7,6 +7,12 @@ import type { UserContext, ParsedJwtPayload } from '../types';
 
 const userRouter = new Hono<UserContext>();
 
+function createPrismaClient(accelerateUrl: string) {
+    return new PrismaClient({
+        accelerateUrl
+    }).$extends(withAccelerate());
+}
+
 userRouter.get('/', (c) => {
     return c.json({ message: "User Router is working" });
 });
@@ -19,9 +25,10 @@ userRouter.post('/signup', async (c) => {
     });
     
     try {
-        const prisma = new PrismaClient().$extends(withAccelerate());
+        const prisma = createPrismaClient(c.env.DATABASE_URL as string);
 
         const body = await c.req.json();
+        console.log("Signup request body:", body);
         const { success } = signUpInput.safeParse(body);
 
         if (!success) {
@@ -41,7 +48,7 @@ userRouter.post('/signup', async (c) => {
             }
         });
 
-        const token = await sign({ id: user.id }, c.env.JWT_SECRET);
+        const token = await sign({ id: user.id }, c.env.JWT_SECRET, "HS256");
         return c.json({
             jwt: token
         });
@@ -60,9 +67,11 @@ userRouter.post('/signup', async (c) => {
 
 userRouter.post('/signin', async (c) => {
     try {
-        const prisma = new PrismaClient().$extends(withAccelerate());
+        const prisma = createPrismaClient(c.env.DATABASE_URL as string);
 
         const body = await c.req.json();
+        console.log("Signin request body:", body);
+        
         const user = await prisma.user.findUnique({
             where: {
                 username: body.username,
@@ -70,12 +79,14 @@ userRouter.post('/signin', async (c) => {
             }
         });
 
+        console.log("User found:", user);
+
         if (!user) {
             c.status(403);
             return c.json({ error: "User not found" });
         }
 
-        const jwt = await sign({ id: user.id }, c.env.JWT_SECRET);
+        const jwt = await sign({ id: user.id }, c.env.JWT_SECRET, "HS256");
         return c.json({"jwt": jwt});
     } catch (e) {
         console.error("Signin error:", e);
@@ -86,7 +97,7 @@ userRouter.post('/signin', async (c) => {
 
 userRouter.get('/me', async(c) => {
     try {
-        const prisma = new PrismaClient().$extends(withAccelerate());
+        const prisma = createPrismaClient(c.env.DATABASE_URL as string);
         
         const authHeader = c.req.header('Authorization');
         if (!authHeader) {
@@ -94,7 +105,7 @@ userRouter.get('/me', async(c) => {
             return c.json({ error: "Unauthorized" });
         }
         
-        const user = await verify(authHeader, c.env.JWT_SECRET) as unknown as ParsedJwtPayload;
+        const user = await verify(authHeader, c.env.JWT_SECRET, "HS256") as unknown as ParsedJwtPayload;
         const userData = await prisma.user.findUnique({
             where: {
                 id: String(user.id)
@@ -121,7 +132,7 @@ userRouter.get('/me', async(c) => {
 
 userRouter.get('/all-users', async (c) => {
     try {
-        const prisma = new PrismaClient().$extends(withAccelerate())
+        const prisma = createPrismaClient(c.env.DATABASE_URL as string);
 
         const users = await prisma.user.findMany({
             select: {
@@ -139,4 +150,3 @@ userRouter.get('/all-users', async (c) => {
 });
 
 export default userRouter;
-
