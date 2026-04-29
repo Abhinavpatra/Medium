@@ -6,6 +6,8 @@ import Blog from "./pages/Blog";
 import Blogs from "./pages/Blogs";
 import Publish from "./pages/Publish";
 import EditBlog from "./pages/EditBlog";
+import { ThemeProvider } from "./hooks/use-theme";
+
 
 function NotFound() {
   return (
@@ -21,18 +23,22 @@ function Root() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Root />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/signin" element={<Signin />} />
-        <Route path="/blog/:id" element={<Blog />} />
-        <Route path="/edit/:id" element={<EditBlog />} />
-        <Route path="/blogs" element={<Blogs />} />
-        <Route path="/publish" element={<Publish />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Root />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/signin" element={<Signin />} />
+            <Route path="/blog/:id" element={<Blog />} />
+            <Route path="/edit/:id" element={<EditBlog />} />
+            <Route path="/blogs" element={<Blogs />} />
+            <Route path="/publish" element={<Publish />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+
+    </ThemeProvider>
   );
 }
 
