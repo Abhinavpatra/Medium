@@ -2,69 +2,16 @@ import AppBar from "../components/AppBar";
 import BlogCard from "../components/BlogCard";
 import SkeletonBlogs from "../components/SkeletonBlogs";
 import useBlogs from "../hooks/UseBlogs";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { BACKEND_URL } from "../Config";
-import { useNavigate } from "react-router-dom";
-
-interface Blog {
-  id: string;
-  title: string;
-  content: string;
-  authorId: string;
-  author?: {
-    id: string;
-    name: string;
-  };
-}
+import { BlogPost } from "../types";
 
 export default function Blogs() {
   const { loading, blogs } = useBlogs();
-  const navigate = useNavigate();
-    // const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-
-  const [, setCurrentUserId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/signin");
-      return;
-    }
-
-    // Get user ID from localStorage
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      setCurrentUserId(userId);
-    } else {
-      // If userId is not in localStorage, fetch it
-      axios
-        .get(`${BACKEND_URL}/api/v1/user/me`, {
-          headers: {
-            Authorization: token,
-          },
-        })
-        .then((response) => {
-          const userId = response.data.user.id;
-          localStorage.setItem("userId", userId);
-          setCurrentUserId(userId);
-        })
-        .catch((error) => {
-          console.error("Error fetching user profile:", error);
-          if (error.response?.status === 401) {
-            localStorage.removeItem("token");
-            localStorage.removeItem("userId");
-            navigate("/signin");
-          }
-        });
-    }
-  }, [navigate]);
 
   if (loading) {
     return (
-      <div>
+      <div className="min-h-screen bg-slate-50">
         <AppBar />
-        <div className="max-w-xl mx-auto">
+        <div className="max-w-2xl mx-auto pt-8 px-4">
           <SkeletonBlogs />
           <SkeletonBlogs />
           <SkeletonBlogs />
@@ -73,15 +20,14 @@ export default function Blogs() {
     );
   }
 
-  // Access the posts array from blogs
-  const posts = blogs?.posts || [];
+  const posts = blogs.posts || [];
 
   return (
-    <>
+    <div className="min-h-screen bg-slate-50">
       <AppBar />
-      <div className="flex justify-center">
-        <div className="max-w-xl">
-          {posts.map((post: Blog) => (
+      <div className="flex justify-center pt-8 px-4">
+        <div className="max-w-2xl w-full">
+          {posts.map((post: BlogPost) => (
             <BlogCard
               key={post.id}
               id={post.id}
@@ -94,6 +40,6 @@ export default function Blogs() {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }

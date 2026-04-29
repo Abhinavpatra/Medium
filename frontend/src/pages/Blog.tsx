@@ -5,11 +5,11 @@ import SkeletonBlogs from "../components/SkeletonBlogs";
    
 export default function Blog() {
     const {id} = useParams();
-    const{loading,blog}=useBlog({
+    const { loading, blog } = useBlog({
         id: String(id) 
     });
 
-    if(loading || !blog){
+    if (loading || !blog) {
         return <div>
             <SkeletonBlogs />
             <div className="flex justify-center">
@@ -20,7 +20,7 @@ export default function Blog() {
     }
     return (
         <div>
-        <FullBlog blog={blog}/>
+        <FullBlog blog={{ post: blog.post }}/>
     </div>
     )
 }
