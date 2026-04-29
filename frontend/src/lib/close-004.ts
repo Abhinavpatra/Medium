@@ -1,4 +1,4 @@
-import type { SoundAsset } from "@/lib/sound-types";
+import type { SoundAsset } from "./sound-types";
 
 export const close004Sound: SoundAsset = {
   name: "close-004",

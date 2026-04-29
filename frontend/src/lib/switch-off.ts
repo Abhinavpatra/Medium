@@ -1,4 +1,4 @@
-import type { SoundAsset } from "@/lib/sound-types";
+import type { SoundAsset } from "./sound-types";
 
 export const switchOffSound: SoundAsset = {
   name: "switch-off",
