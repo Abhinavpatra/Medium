@@ -1,4 +1,4 @@
-import { SignUpInput } from "@abhinavpatra/common";
+import { SignUpInput } from "../types";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
