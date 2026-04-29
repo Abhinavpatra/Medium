@@ -4,7 +4,6 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../Config";
 
-// read trpc docs
 export default function Auth({
   type,
   onError,
@@ -14,16 +13,15 @@ export default function Auth({
 }) {
   const navigate = useNavigate();
 
-  // defined the type of input, as it can take only signup or signin, and the displayed details are based on that. otherwise its copy paste in signup and signin page
   const [postInputs, setPostInputs] = useState<SignUpInput>({
-    // you should have a separate thing calles SigninInput, but still this will work
-
     name: "",
     username: "",
     password: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
   const sendRequest = async () => {
     try {
+      setErrorMessage("");
       const res = await axios.post(
         `${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
         postInputs
@@ -31,7 +29,6 @@ export default function Auth({
       const jwt = res.data.jwt;
       localStorage.setItem("token", jwt);
 
-      // After setting token, fetch user details
       const userRes = await axios.get(`${BACKEND_URL}/api/v1/user/me`, {
         headers: {
           Authorization: jwt,
@@ -40,10 +37,27 @@ export default function Auth({
 
       localStorage.setItem("userId", userRes.data.user.id);
       navigate("/blogs");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed fetching the backend info", error);
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          const status = error.response.status;
+          const data = error.response.data;
+          if (status === 409) {
+            setErrorMessage("Username already exists. Try signing in or use a different username.");
+          } else if (status === 403) {
+            setErrorMessage("Invalid username or password.");
+          } else if (data?.error) {
+            setErrorMessage(data.error);
+          } else {
+            setErrorMessage(`Error: ${status}`);
+          }
+        } else {
+          setErrorMessage("Network error. Please check your connection.");
+        }
+      }
       if (type === "signin") {
-        onError(); // Call the onError function if login fails
+        onError();
       }
     }
   };
@@ -72,6 +86,11 @@ export default function Auth({
           </div>
         </div>
         <div className="flex flex-col items-center  mt-7">
+          {errorMessage && (
+            <div className="mb-4 w-96 p-2.5 bg-red-100 border border-red-400 text-red-700 rounded">
+              {errorMessage}
+            </div>
+          )}
           {type === "signup" ? (
             <Label
               label="Name"

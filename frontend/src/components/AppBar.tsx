@@ -1,12 +1,14 @@
 import Avatar from "./Avatar";
 import { Link, useNavigate } from "react-router-dom";
 import useUser from "../hooks/useUser";
+import SoundManager from "../utils/sounds";
 
 export default function Appbar() {
     const { user, loading } = useUser();
     const navigate = useNavigate();
 
     const handleLogout = () => {
+        SoundManager.click();
         // Clear all authentication data
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
@@ -16,32 +18,40 @@ export default function Appbar() {
     };
 
     return (
-        <div className="flex justify-between px-6 py-2 border-b-4">
-            <Link to={'/blogs'} className="flex flex-col justify-center text-xl cursor-pointer font-semibold">
+        <div className="sticky top-0 z-50 flex justify-between items-center px-6 py-4 bg-white/80 backdrop-blur-md border-b border-slate-100">
+            <Link 
+                to={'/blogs'} 
+                onClick={() => SoundManager.click()}
+                onMouseEnter={() => SoundManager.hover()}
+                className="font-display text-2xl font-bold tracking-tight text-slate-900 hover:text-blue-600 transition-colors"
+            >
                 Medium
             </Link>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
                 <Link to={`/publish`}>
                     <button 
                         type="button" 
-                        className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center transition-colors"
+                        onClick={() => SoundManager.click()}
+                        onMouseEnter={() => SoundManager.hover()}
+                        className="font-sans text-sm font-medium text-white bg-slate-900 hover:bg-slate-800 px-5 py-2.5 rounded-full transition-all hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-slate-200"
                     >
-                        New
+                        New Story
                     </button>
                 </Link>
                 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-4">
                     {!loading && user && (
-                        <span className="text-gray-700 font-medium">{user.name || 'Anonymous'}</span>
+                        <span className="text-slate-600 font-medium text-sm hidden sm:block">{user.name || 'Anonymous'}</span>
                     )}
                     <Avatar size="big" name={user?.name || 'A'} />
                     
                     <button
                         onClick={handleLogout}
-                        className="bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 text-sm font-medium px-4 py-1.5 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-200"
+                        onMouseEnter={() => SoundManager.hover()}
+                        className="text-sm font-medium text-slate-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors focus:outline-none"
                         aria-label="Logout"
                     >
-                        Logout
+                        Sign out
                     </button>
                 </div>
             </div>

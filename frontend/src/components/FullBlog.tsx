@@ -8,11 +8,11 @@ interface Blog {
     id: string;
     title: string;
     content: string;
-    author: {
+    author?: {
       name: string;
       id: string;
     };
-    comments: Array<{
+    comments?: Array<{
       id: number;
       content: string;
       createdAt: string;
@@ -165,9 +165,9 @@ export default function FullBlog({ blog }: { blog: Blog }) {
         <div className="col-span-4 m-0 pl-0 text-slate-500">
           <div className="md-0 mt-2">Author</div>
           <div className="text-slate-700 font-bold w-full text-xl mt-2 flex items-center">
-            <Avatar name={blog.post.author.name} />
+            <Avatar name={blog.post.author?.name || "Unknown"} />
 
-            <div className="ml-2 ">{blog.post.author?.name}</div>
+            <div className="ml-2 ">{blog.post.author?.name || "Unknown"}</div>
           </div>
           <div className="w-full text-slate-500 text-md">
             a description of the author Lorem ipsum dolor sit amet consectetur
