@@ -3,7 +3,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BACKEND_URL } from "../Config";
-import SoundManager from "../utils/sounds";
+import { useSound } from "../hooks/use-sound";
+import { click003Sound } from "../lib/click-003";
+import { successChimeSound } from "../lib/success-chime";
+import { errorBuzzSound } from "../lib/error-buzz";
 
 export default function Auth({
   type,
@@ -20,6 +23,11 @@ export default function Auth({
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  
+  const [playClick] = useSound(click003Sound, { volume: 0.5 });
+  const [playSuccess] = useSound(successChimeSound, { volume: 0.5 });
+  const [playError] = useSound(errorBuzzSound, { volume: 0.4 });
+
   const sendRequest = async () => {
     try {
       setErrorMessage("");
@@ -37,9 +45,11 @@ export default function Auth({
       });
 
       localStorage.setItem("userId", userRes.data.user.id);
+      playSuccess();
       navigate("/blogs");
     } catch (error: unknown) {
       console.error("Failed fetching the backend info", error);
+      playError();
       if (axios.isAxiosError(error)) {
         if (error.response) {
           const status = error.response.status;
@@ -131,7 +141,7 @@ export default function Auth({
           />
           <button
             onClick={()=>{
-              SoundManager.click();
+              playClick();
               sendRequest()}
             }
             type="button"
@@ -144,7 +154,7 @@ export default function Auth({
     </>
   );
 }
-/**anytime the user changes something in the input, it gets the pravious value and then edits/updates the new edit, as it is next to it
+/**anytime the user changes something in the input, it gets the pravious value and then edits/updates the new edit, as it was
  * basically takes all the keys and values, and spreads it accross the other object, like it was.
  * we can firther edit or modify or add new details
  */
