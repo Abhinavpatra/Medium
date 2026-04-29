@@ -40,7 +40,7 @@ export default function Appbar() {
   };
 
   return (
-    <div className="sticky top-0 z-50 flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-dark backdrop-blur-md border-b border-slate-100 dark:border-slate-800">
+    <div className="sticky top-0 z-50 flex justify-between items-center px-6 py-4 bg-white/80 dark:bg-black backdrop-blur-md border-b border-slate-100 dark:border-slate-800">
       <Link
         to={"/blogs"}
         onClick={() => playSelect()}
