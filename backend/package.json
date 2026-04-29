@@ -9,6 +9,7 @@
     "seed": "bunx prisma db execute --file db/prisma/seed.sql --schema db/prisma/schema.prisma"
   },
   "dependencies": {
+    "@abhinavpatra/common": "file:../common",
     "@prisma/cli-init": "^0.8.0",
     "@prisma/client": "^7.8.0",
     "@prisma/extension-accelerate": "^3.0.1",
