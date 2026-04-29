@@ -12,6 +12,7 @@ npm run dev
 Deploy to Cloudflare Workers:
 
 ```bash
+npm run deploy
 ```
 
 ## Worker URL
