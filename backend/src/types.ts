@@ -20,7 +20,7 @@ export interface UserBindings {
 }
 
 export type BlogContext = {
- Bindings: Env;
+  Bindings: Env;
   Variables: {
     userId: string;
   };
