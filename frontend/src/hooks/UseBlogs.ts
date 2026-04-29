@@ -1,45 +1,23 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { BACKEND_URL } from "../Config";
-
-interface Blog {
-  id: string;
-  title: string;
-  content: string;
-  authorId: string;
-  author?: {
-    id: string;
-    name: string;
-  };
-}
-
-interface BlogsResponse {
-  posts: Blog[];
-}
+import { BlogsResponse } from "../types";
 
 export default function useBlogs() {
   const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState<BlogsResponse>({ posts: [] });
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
     axios
-      .get<BlogsResponse>(`${BACKEND_URL}/api/v1/blog/bulk`, {
-        headers: {
-          Authorization: token,
-        },
-      })
+      .get<BlogsResponse>(`${BACKEND_URL}/api/v1/blog/bulk`)
       .then((res) => {
         setBlogs(res.data);
         setLoading(false);
       })
-      .catch((error) => {
-        console.error("Error fetching blogs:", error);
+      .catch((err) => {
+        console.error("Error fetching blogs:", err);
+        setError(err.message);
         setLoading(false);
       });
   }, []);
@@ -47,5 +25,6 @@ export default function useBlogs() {
   return {
     blogs,
     loading,
+    error,
   };
 }

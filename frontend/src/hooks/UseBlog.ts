@@ -1,47 +1,33 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { BACKEND_URL } from "../Config";
-
-interface Blog {
-  post: {
-    id: string;
-    title: string;
-    content: string;
-    author: {
-      name: string;
-      id: string; // Ensure this is included
-    };
-    comments: Array<{
-      id: number;
-      content: string;
-      createdAt: string;
-      author: {
-        id: string;
-        name: string | null;
-        username: string;
-      };
-    }>;
-  };
-}
+import { BlogDetailResponse } from "../types";
 
 export default function useBlog({ id }: { id: string }) {
   const [loading, setLoading] = useState(true);
-  const [blog, setBlog] = useState<Blog>({} as Blog);
+  const [blog, setBlog] = useState<BlogDetailResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     axios
-      .get(`${BACKEND_URL}/api/v1/blog/${id}`, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
+      .get<BlogDetailResponse>(`${BACKEND_URL}/api/v1/blog/${id}`, {
+        headers: token ? { Authorization: token } : undefined,
       })
       .then((res) => {
         setBlog(res.data);
         setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching blog:", err);
+        setError(err.message);
+        setLoading(false);
       });
   }, [id]);
+
   return {
     blog,
     loading,
+    error,
   };
 }
