@@ -8,6 +8,7 @@ import Publish from "./pages/Publish";
 import EditBlog from "./pages/EditBlog";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { JSX } from "react";
 
 function NotFound() {
   return (
