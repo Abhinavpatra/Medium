@@ -12,12 +12,11 @@ npm run dev
 Deploy to Cloudflare Workers:
 
 ```bash
-npm run deploy
 ```
 
 ## Worker URL
 
-https://medium-api.patraabhinav12.workers.dev
+medium.patraabhinav12.workers.dev
 
 Update DATABASE_URL in Cloudflare Workers dashboard:
 1. Go to https://dash.cloudflare.com

@@ -19,6 +19,6 @@
     "@cloudflare/workers-types": "^4.20240529.0",
     "@types/node": "^25.6.0",
     "prisma": "^7.8.0",
-    "wrangler": "^4.20.1"
+    "wrangler": "^4.86.0"
   }
 }
