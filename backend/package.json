@@ -9,16 +9,18 @@
     "seed": "bunx prisma db execute --file db/prisma/seed.sql --schema db/prisma/schema.prisma"
   },
   "dependencies": {
-    "@abhinavpatra/common": "file:../common",
-    "@prisma/cli-init": "^0.8.0",
-    "@prisma/client": "^6.19.3",
-    "@prisma/extension-accelerate": "^1.0.0",
-    "hono": "^4.5.9"
+    "@abhinavpatra/common": "1.0.3",
+    "@prisma/client": "^7.8.0",
+    "@prisma/extension-accelerate": "^3.0.1",
+    "@prisma/adapter-pg": "^7.8.0",
+    "dotenv": "^17.4.2",
+    "hono": "^4.5.9",
+    "pg": "^8.13.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240529.0",
     "@types/node": "^25.6.0",
-    "prisma": "^6.19.3",
+    "prisma": "^7.8.0",
     "wrangler": "^4.86.0"
   }
 }
