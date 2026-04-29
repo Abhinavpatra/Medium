@@ -1,0 +1,4 @@
+How to push new version to npm library
+```bash
+npm publish
+```
